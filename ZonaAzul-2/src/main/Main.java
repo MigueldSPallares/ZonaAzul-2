@@ -18,7 +18,11 @@ public class Main extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main frame = new Main();
+					/**
+					 * El constructor por defecto de la clase no puede utilizarse dado que el dni de
+					 * ejemplo no es valido
+					 */
+					Main frame = new Main("dniEjemplo");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -29,8 +33,10 @@ public class Main extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * 
+	 * @param dniUsuario
 	 */
-	public Main() {
+	public Main(String dniUsuario) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
