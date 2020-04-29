@@ -13,15 +13,18 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JPasswordField;
 
 public class Login extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblNewLabel;
-	private JTextField textDni;
-	private JTextField textContrasena;
-	private JButton btnComprobar;
 	private JButton btnRegistrar;
+	private JTextField textDni;
+	private JPasswordField passwordField;
+	private JButton btnComprobar;
 
 	/**
 	 * Launch the application.
@@ -55,26 +58,36 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		lblNewLabel = new JLabel("New label");
-		lblNewLabel.setBounds(175, 109, 46, 13);
+		lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\migue\\git\\ZonaAzul-2\\ZonaAzul-2\\src\\images\\admin.png"));
+		lblNewLabel.setBounds(91, 10, 243, 256);
 		contentPane.add(lblNewLabel);
 		
+		btnRegistrar = new JButton("Registrar nuevo usuario");
+		btnRegistrar.addMouseListener(new BtnRegistrarMouseListener());
+		btnRegistrar.setBounds(140, 398, 146, 21);
+		contentPane.add(btnRegistrar);
+		
 		textDni = new JTextField();
-		textDni.setBounds(133, 217, 149, 19);
+		textDni.setBounds(140, 287, 146, 19);
 		contentPane.add(textDni);
 		textDni.setColumns(10);
 		
-		textContrasena = new JTextField();
-		textContrasena.setBounds(133, 264, 149, 19);
-		contentPane.add(textContrasena);
-		textContrasena.setColumns(10);
+		passwordField = new JPasswordField();
+		passwordField.setBounds(140, 316, 146, 19);
+		contentPane.add(passwordField);
 		
 		btnComprobar = new JButton("Comprobar usuario");
-		btnComprobar.setBounds(133, 313, 149, 21);
+		btnComprobar.setBounds(140, 355, 146, 21);
 		contentPane.add(btnComprobar);
-		
-		btnRegistrar = new JButton("Registrar nuevo usuario");
-		btnRegistrar.setBounds(136, 360, 146, 21);
-		contentPane.add(btnRegistrar);
+		btnComprobar.setEnabled(false);
+	}
+	private class BtnRegistrarMouseListener extends MouseAdapter {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			Register r = new Register();
+			r.setVisible(true);
+			dispose();
+		}
 	}
 }
