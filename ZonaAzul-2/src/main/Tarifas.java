@@ -58,6 +58,7 @@ public class Tarifas extends JFrame {
 	 * Create the frame.
 	 */
 	public Tarifas(String dniEnviadoDesdeMain) {
+		setResizable(false);
 		setTitle("Zona Azul");
 		
 		/**
