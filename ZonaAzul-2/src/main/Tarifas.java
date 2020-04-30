@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Font;
 
 public class Tarifas extends JFrame {
 	
@@ -57,7 +58,7 @@ public class Tarifas extends JFrame {
 	 * Create the frame.
 	 */
 	public Tarifas(String dniEnviadoDesdeMain) {
-		setTitle("Tarifas");
+		setTitle("Zona Azul");
 		
 		/**
 		 * Aqui se pone el dni al que se ha enviado desde el main para poder volver mas adelante
@@ -67,16 +68,19 @@ public class Tarifas extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 400, 335);
 		contentPane = new JPanel();
+		contentPane.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		btnNewButton = new JButton("Volver");
+		btnNewButton.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+		btnNewButton.setFocusPainted(false);
 		btnNewButton.setBorderPainted(false);
 		btnNewButton.setSelected(true);
 		btnNewButton.addKeyListener(new BtnNewButtonKeyListener());
 		btnNewButton.addMouseListener(new BtnNewButtonMouseListener());
-		btnNewButton.setBackground(Color.GRAY);
+		btnNewButton.setBackground(Color.LIGHT_GRAY);
 		btnNewButton.setBounds(254, 255, 120, 30);
 		contentPane.add(btnNewButton);
 
