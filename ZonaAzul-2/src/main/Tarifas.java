@@ -16,9 +16,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Font;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class Tarifas extends JFrame {
-	
+
 	/**
 	 * 
 	 */
@@ -30,7 +32,7 @@ public class Tarifas extends JFrame {
 	private String dniUsuario;
 
 	private JPanel contentPane;
-	private JButton btnNewButton;
+	private JButton btnVolver;
 	private JTable table;
 	private JScrollPane scrollPane;
 
@@ -60,9 +62,10 @@ public class Tarifas extends JFrame {
 	public Tarifas(String dniEnviadoDesdeMain) {
 		setResizable(false);
 		setTitle("Zona Azul");
-		
+
 		/**
-		 * Aqui se pone el dni al que se ha enviado desde el main para poder volver mas adelante
+		 * Aqui se pone el dni al que se ha enviado desde el main para poder volver mas
+		 * adelante
 		 */
 		dniUsuario = dniEnviadoDesdeMain;
 
@@ -74,18 +77,22 @@ public class Tarifas extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		btnNewButton = new JButton("Volver");
-		btnNewButton.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-		btnNewButton.setFocusPainted(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setSelected(true);
-		btnNewButton.addKeyListener(new BtnNewButtonKeyListener());
-		btnNewButton.addMouseListener(new BtnNewButtonMouseListener());
-		btnNewButton.setBackground(Color.LIGHT_GRAY);
-		btnNewButton.setBounds(254, 255, 120, 30);
-		contentPane.add(btnNewButton);
+		btnVolver = new JButton("Volver");
+		btnVolver.addFocusListener(new BtnVolverFocusListener());
+		btnVolver.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+		btnVolver.setFocusPainted(false);
+		btnVolver.setBorderPainted(false);
+		btnVolver.setSelected(true);
+		btnVolver.addKeyListener(new BtnNewButtonKeyListener());
+		btnVolver.addMouseListener(new BtnNewButtonMouseListener());
+		btnVolver.setBackground(Color.LIGHT_GRAY);
+		btnVolver.setBounds(254, 255, 120, 30);
+		contentPane.add(btnVolver);
 
 		scrollPane = new JScrollPane();
+		scrollPane.setWheelScrollingEnabled(false);
+		scrollPane.setRequestFocusEnabled(false);
+		scrollPane.setFocusable(false);
 		scrollPane.setBackground(Color.GRAY);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setEnabled(false);
@@ -109,6 +116,8 @@ public class Tarifas extends JFrame {
 		table.getColumnModel().getColumn(0).setMinWidth(175);
 		table.getColumnModel().getColumn(0).setMaxWidth(175);
 		table.getColumnModel().getColumn(1).setPreferredWidth(160);
+
+		btnVolver.requestFocus();
 	}
 
 	private class BtnNewButtonMouseListener extends MouseAdapter {
@@ -120,10 +129,16 @@ public class Tarifas extends JFrame {
 
 	private class BtnNewButtonKeyListener extends KeyAdapter {
 		@Override
-		public void keyPressed(KeyEvent e) {
+		public void keyTyped(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				volver();
 			}
+		}
+	}
+
+	private class BtnVolverFocusListener extends FocusAdapter {
+		@Override
+		public void focusGained(FocusEvent e) {
 		}
 	}
 
