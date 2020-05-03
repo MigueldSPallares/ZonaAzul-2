@@ -1,6 +1,8 @@
 package clases;
 
-public class Reserva {
+import java.io.Serializable;
+
+public class Reserva implements Serializable{
 	private String dni;
 	private String matricula;
 	private String fecha;

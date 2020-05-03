@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import clases.IOData;
+import clases.Usuario;
 import login.Login;
 
 import javax.swing.JLabel;
@@ -28,13 +30,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import javax.swing.DefaultComboBoxModel;
 
 public class Main extends JFrame {
 
 	/**
-	 * Variable dni para moverse por las interfaces declarada aqu�
+	 * Variable dni para moverse por las interfaces declarada aquí
 	 */
 	private String dniEnviadoDesdeMain;
+
+	/**
+	 * Variable usuario
+	 */
+	private Usuario usuario;
 
 	/**
 	 * Inicializacion fecha
@@ -50,6 +58,7 @@ public class Main extends JFrame {
 	private JTextField tfHoraActual;
 	private JTextField tfFechaActual;
 	private JLabel lblSeleccionarCoche;
+	@SuppressWarnings("rawtypes")
 	private JComboBox cbSeleccioneCoche;
 	private JLabel lblSeleccioneTiempoReserva;
 	private JTextField tfMinutos;
@@ -71,7 +80,7 @@ public class Main extends JFrame {
 					 * El constructor por defecto de la clase no puede utilizarse dado que el dni de
 					 * ejemplo no es valido
 					 */
-					Main frame = new Main("dniEjemplo");
+					Main frame = new Main("1234567A");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -85,8 +94,10 @@ public class Main extends JFrame {
 	 * 
 	 * @param dniUsuario
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Main(String dniUsuario) {
-		setTitle("Zona Azul");
+		setResizable(false);
+		setTitle("Zona Azul                                                         User: " + dniUsuario);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 560);
 		contentPane = new JPanel();
@@ -129,6 +140,7 @@ public class Main extends JFrame {
 		contentPane.add(lblSeleccionarCoche);
 
 		cbSeleccioneCoche = new JComboBox();
+		cbSeleccioneCoche.setModel(new DefaultComboBoxModel(new String[] { "- No hay coches disponibles -" }));
 		cbSeleccioneCoche.setBackground(Color.WHITE);
 		cbSeleccioneCoche.setBounds(225, 261, 220, 25);
 		contentPane.add(cbSeleccioneCoche);
@@ -215,6 +227,15 @@ public class Main extends JFrame {
 			}
 		});
 		timer.start();
+
+		/**
+		 * Inicializacion del usuario
+		 */
+		usuario = IOData.cargarUsuario(dniUsuario);
+
+		if (usuario != null && !usuario.getvCoches().isEmpty()) {
+			cbSeleccioneCoche.setModel(new DefaultComboBoxModel(usuario.getvCoches().toArray()));
+		}
 	}
 
 	protected void actualizarFechaHora() {
@@ -315,6 +336,7 @@ public class Main extends JFrame {
 			}
 		}
 	}
+
 	private class TextFieldKeyListener extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
@@ -323,24 +345,86 @@ public class Main extends JFrame {
 	}
 
 	public void reservar() {
-		/**
-		 * Reservar por implementar
-		 */
+		String matricula = cbSeleccioneCoche.getSelectedItem().toString();
+		int minutos = Integer.parseInt(tfMinutos.getText());
+		String fecha = tfFechaActual.getText();
+		String horaInicio = tfHoraActual.getText();
+		String horaFin = calcularHoraFin(minutos);
+
+		System.out.println(matricula);
+
+		if (matricula.equals("- No hay coches disponibles -")) {
+			JOptionPane.showMessageDialog(null, "Seleccione una matricula");
+		} else {
+			if (IOData.guardarReserva(dniEnviadoDesdeMain, matricula, fecha, horaInicio, horaFin)) {
+				JOptionPane.showMessageDialog(null, "Reserva realizada con exito");
+			} else {
+				JOptionPane.showMessageDialog(null, "Fallo al realizar la reserva");
+			}
+		}
 	}
 
+	private String calcularHoraFin(int minutos) {
+		Calendar fechaFin = new GregorianCalendar();
+		fechaFin.add(Calendar.MINUTE, minutos);
+		String resultado = "";
+		if (fecha.get(Calendar.HOUR_OF_DAY) < 10) {
+			resultado += 0;
+		}
+		resultado += fecha.get(Calendar.HOUR_OF_DAY) + ":";
+
+		if (fecha.get(Calendar.MINUTE) < 10) {
+			resultado += 0;
+		}
+		resultado += fecha.get(Calendar.MINUTE) + ":";
+
+		if (fecha.get(Calendar.SECOND) < 10) {
+			resultado += 0;
+		}
+		resultado += fecha.get(Calendar.SECOND);
+		return resultado;
+	}
 
 	public void checkFormato() {
 		String cadena = tfMinutos.getText();
-		if(!cadena.equals("")) {
-			if(!esNumero(cadena)) {
-				if(btnReservar.isEnabled()) {
+		if (!cadena.equals("")) {
+			if (!esNumero(cadena) || Integer.parseInt(cadena) < 1 || Integer.parseInt(cadena) > 150) {
+				if (btnReservar.isEnabled()) {
 					btnReservar.setEnabled(false);
 				}
 				tfMinutos.setText("");
-				JOptionPane.showMessageDialog(null, "Introduzca �nicamente n�meros (0-9)");
-				
+				tfCoste.setText("0.00€");
+				JOptionPane.showMessageDialog(null,
+						"Introduzca únicamente números (0-9) dentro de lo permitido por las tarifas");
+
 			} else {
 				btnReservar.setEnabled(true);
+				actualizarCoste();
+			}
+		}
+	}
+
+	private void actualizarCoste() {
+		int minutos = Integer.parseInt(tfMinutos.getText());
+		if (minutos <= 20) {
+			tfCoste.setText("0.20€");
+		} else {
+			if (minutos <= 30) {
+				tfCoste.setText("0.35€");
+			} else {
+				if (minutos <= 60) {
+					tfCoste.setText("0.85€");
+				} else {
+					if (minutos <= 90) {
+						tfCoste.setText("1.35€");
+					} else {
+						if (minutos <= 120) {
+							tfCoste.setText("1.90€");
+						} else {
+							tfCoste.setText("2.40€");
+						}
+					}
+				}
 			}
 		}
 	}
@@ -349,7 +433,7 @@ public class Main extends JFrame {
 		try {
 			Integer.parseInt(cadena);
 			return true;
-		} catch (NumberFormatException nfe){
+		} catch (NumberFormatException nfe) {
 			return false;
 		}
 	}
