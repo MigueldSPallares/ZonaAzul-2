@@ -18,7 +18,11 @@ public class Coches extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Coches frame = new Coches();
+					/**
+					 * El constructor por defecto de la clase no puede volver al Main dado que
+					 * utiliza un dni no valido
+					 */
+					Coches frame = new Coches("dniEjemplo");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -29,8 +33,9 @@ public class Coches extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param dniEnviadoDesdeMain 
 	 */
-	public Coches() {
+	public Coches(String dniEnviadoDesdeMain) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
