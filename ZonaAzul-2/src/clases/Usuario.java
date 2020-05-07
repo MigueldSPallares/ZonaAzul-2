@@ -5,11 +5,11 @@ import java.util.Arrays;
 
 public class Usuario {
 	private String dni;
-	private char[] password;
+	private String password;
 	private ArrayList<String> vCoches;
 	private ArrayList<Reserva> vReservas;
 	
-	public Usuario(String dni, char[] password, ArrayList<String> vCoches, ArrayList<Reserva> vReservas) {
+	public Usuario(String dni, String password, ArrayList<String> vCoches, ArrayList<Reserva> vReservas) {
 		super();
 		this.dni = dni;
 		this.password = password;
@@ -18,7 +18,7 @@ public class Usuario {
 	}
 	@Override
 	public String toString() {
-		return "Usuario [dni=" + dni + ", password=" + Arrays.toString(password) + ", vCoches=" + vCoches
+		return "Usuario [dni=" + dni + ", password=" + password + ", vCoches=" + vCoches
 				+ ", vReservas=" + vReservas + "]";
 	}
 	public String getDni() {
@@ -27,10 +27,10 @@ public class Usuario {
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
-	public char[] getPassword() {
+	public String getPassword() {
 		return password;
 	}
-	public void setPassword(char[] password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 	public ArrayList<String> getvCoches() {
